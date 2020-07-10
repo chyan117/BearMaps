@@ -57,7 +57,16 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        List<String> cleanNames = trie.keysWithPrefix(cleanString(prefix));
+        List<String> fullNames = new LinkedList<>();
+        for (String name: cleanNames) {
+            for (Node n: nameToNodes.get(name)) {
+                if (!fullNames.contains(n.name())) {
+                    fullNames.add(n.name());
+                }
+            }
+        }
+        return fullNames;
     }
 
     /**
@@ -74,7 +83,19 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "id" -> Number, The id of the node. <br>
      */
     public List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        List<Map<String, Object>> locations = new LinkedList<>();
+        String cleanName = cleanString(locationName);
+        if (nameToNodes.containsKey(cleanName)) {
+            for (Node n: nameToNodes.get(cleanName)) {
+                Map<String, Object> locationInfo = new HashMap<>();
+                locationInfo.put("lon", n.lon());
+                locationInfo.put("lat", n.lat());
+                locationInfo.put("name", n.name());
+                locationInfo.put("id", n.id());
+                locations.add(locationInfo);
+            }
+        }
+        return locations;
     }
 
 
