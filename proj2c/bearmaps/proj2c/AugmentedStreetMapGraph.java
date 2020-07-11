@@ -1,8 +1,8 @@
 package bearmaps.proj2c;
 
+import bearmaps.proj2ab.KDTree;
 import bearmaps.hw4.streetmap.Node;
 import bearmaps.hw4.streetmap.StreetMapGraph;
-import bearmaps.proj2ab.Point;
 import bearmaps.proj2ab.*;
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         Map_Node_Point = new HashMap<>();
         List<Point> points = new ArrayList<>();
         for(Node n: nodes){
-            if(neighbors(n.id()).size()==0){
+            if(neighbors(n.id()).size()<=0){
                 continue;
             }
             Map_Node_Point.put(new Point(n.lon(), n.lat()), n);
@@ -43,7 +43,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * @return The id of the node in the graph closest to the target.
      */
     public long closest(double lon, double lat) {
-       Point s = tree.nearest(lon, lat);
+        Point s = tree.nearest(lon, lat);
         return Map_Node_Point.get(s).id();
     }
 
@@ -57,16 +57,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        List<String> cleanNames = trie.keysWithPrefix(cleanString(prefix));
-        List<String> fullNames = new LinkedList<>();
-        for (String name: cleanNames) {
-            for (Node n: nameToNodes.get(name)) {
-                if (!fullNames.contains(n.name())) {
-                    fullNames.add(n.name());
-                }
-            }
-        }
-        return fullNames;
+        return new ArrayList<>();
     }
 
     /**
@@ -83,19 +74,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "id" -> Number, The id of the node. <br>
      */
     public List<Map<String, Object>> getLocations(String locationName) {
-        List<Map<String, Object>> locations = new LinkedList<>();
-        String cleanName = cleanString(locationName);
-        if (nameToNodes.containsKey(cleanName)) {
-            for (Node n: nameToNodes.get(cleanName)) {
-                Map<String, Object> locationInfo = new HashMap<>();
-                locationInfo.put("lon", n.lon());
-                locationInfo.put("lat", n.lat());
-                locationInfo.put("name", n.name());
-                locationInfo.put("id", n.id());
-                locations.add(locationInfo);
-            }
-        }
-        return locations;
+        return new ArrayList<>();
     }
 
 
